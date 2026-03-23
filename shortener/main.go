@@ -12,6 +12,9 @@ func main() {
 
 	h := handler.NewHandler(memStorage)
 
+	// redisStorage := storage.NewRedisStorage("localhost:6379")
+	// h := handler.NewHandler(redisStorage)
+
 	//register route
 	http.HandleFunc("POST /shorten", h.Shorten)
 	http.HandleFunc("Get /{shortCode}", h.Redirect)

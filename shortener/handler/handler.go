@@ -20,14 +20,13 @@ type shortenRequest struct {
 }
 
 type shortenResponse struct {
-	ShortCode string 
-	ShortURL string
+	ShortCode string
+	ShortURL  string
 }
-
 
 //POST /shorten
 
-func(h *Handler) Shorten(w http.ResponseWriter, r *http.Request) {
+func (h *Handler) Shorten(w http.ResponseWriter, r *http.Request) {
 	var req shortenRequest
 	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
 		http.Error(w, "Invalid request body", http.StatusBadRequest)
@@ -53,14 +52,14 @@ func(h *Handler) Shorten(w http.ResponseWriter, r *http.Request) {
 
 	resp := shortenResponse{
 		ShortCode: shortCode,
-		ShortURL: shortURL,
+		ShortURL:  shortURL,
 	}
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusCreated)
 	json.NewEncoder(w).Encode(resp)
 }
 
-//Get method
+// Get method
 func (h *Handler) Redirect(w http.ResponseWriter, r *http.Request) {
 	shortCode := r.URL.Path[1:]
 	longURL, ok := h.storage.Load(shortCode)
@@ -70,5 +69,3 @@ func (h *Handler) Redirect(w http.ResponseWriter, r *http.Request) {
 	}
 	http.Redirect(w, r, longURL, http.StatusFound)
 }
-
-
